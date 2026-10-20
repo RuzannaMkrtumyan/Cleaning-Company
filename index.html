@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Maison Clère — Bespoke Cleaning Atelier</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.0/index.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/fraunces@5.0.0/index.css"/>
+<style>
+  :root{
+    --cream:#f7f4ee;
+    --cream-2:#efeae0;
+    --paper:#fbf9f4;
+    --forest:#1e3a2f;
+    --forest-soft:#2d5242;
+    --gold:#b8935a;
+    --gold-soft:#d4b886;
+    --ink:#2a2a2a;
+    --muted:#7a7164;
+    --line:rgba(30,58,47,0.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--cream);color:var(--ink);font-family:'Inter',system-ui,sans-serif;scroll-behavior:smooth;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  .serif{font-family:'Fraunces',Georgia,serif;font-weight:400;letter-spacing:-0.02em}
+
+  /* ---------- Loader ---------- */
+  #loader{position:fixed;inset:0;z-index:9999;background:var(--cream);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1s ease, visibility 1s ease}
+  #loader.hidden{opacity:0;visibility:hidden}
+  .loader-mark{font-family:'Fraunces',serif;font-size:42px;color:var(--forest);letter-spacing:-0.02em;position:relative}
+  .loader-mark::after{content:"";position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);width:0;height:1px;background:var(--gold);animation:loaderLine 1.8s ease forwards}
+  @keyframes loaderLine{0%{width:0}60%{width:80px}100%{width:0;left:100%}}
+  .loader-sub{margin-top:32px;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:var(--muted)}
+  .loader-dots{margin-top:14px;display:flex;gap:6px}
+  .loader-dots span{width:4px;height:4px;border-radius:50%;background:var(--gold);opacity:0.3;animation:dotPulse 1.4s ease-in-out infinite}
+  .loader-dots span:nth-child(2){animation-delay:0.15s}
+  .loader-dots span:nth-child(3){animation-delay:0.3s}
+  @keyframes dotPulse{0%,100%{opacity:0.3;transform:scale(1)}50%{opacity:1;transform:scale(1.4)}}
+
+  /* ---------- Nav ---------- */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:all .5s ease;padding:24px 0}
+  nav.scrolled{background:rgba(247,244,238,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:16px 0}
+  .nav-link{position:relative;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:var(--forest);transition:color .3s}
+  .nav-link:hover{color:var(--gold)}
+  .nav-link::after{content:"";position:absolute;left:0;bottom:-4px;width:0;height:1px;background:var(--gold);transition:width .4s ease}
+  .nav-link:hover::after{width:100%}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;padding-top:100px}
+  .hero-bg{position:absolute;inset:-15%;z-index:0;will-change:transform;transition:transform .1s linear}
+  .hero-bg-inner{width:100%;height:100%;background:
+    radial-gradient(ellipse at 30% 20%, rgba(212,184,134,0.25), transparent 55%),
+    radial-gradient(ellipse at 80% 70%, rgba(30,58,47,0.15), transparent 55%),
+    linear-gradient(135deg, #e8dfce 0%, #d4c5a8 35%, #b8a886 70%, #8f7d5a 100%)}
+  .hero-bg-inner::before{content:"";position:absolute;inset:0;background-image:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 3%),
+    radial-gradient(circle at 70% 60%, rgba(255,255,255,0.3) 0%, transparent 2%),
+    radial-gradient(circle at 40% 80%, rgba(255,255,255,0.3) 0%, transparent 2.5%),
+    radial-gradient(circle at 85% 25%, rgba(255,255,255,0.35) 0%, transparent 2%);
+    filter:blur(1px)}
+  .hero-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg, rgba(247,244,238,0.95) 0%, rgba(247,244,238,0.7) 40%, rgba(247,244,238,0.2) 70%, rgba(247,244,238,0) 100%)}
+  .hero-content{position:relative;z-index:2}
+  .eyebrow{font-size:11px;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);display:inline-flex;align-items:center;gap:12px}
+  .eyebrow::before{content:"";width:32px;height:1px;background:var(--gold)}
+  .hero h1{font-family:'Fraunces',serif;font-size:clamp(3rem,7vw,6.5rem);line-height:0.98;color:var(--forest);font-weight:300;letter-spacing:-0.03em}
+  .hero h1 em{font-style:italic;font-weight:400;color:var(--gold)}
+  .hero p.lead{font-size:17px;line-height:1.7;color:var(--muted);max-width:460px}
+  .btn-primary{display:inline-flex;align-items:center;gap:10px;padding:16px 32px;background:var(--forest);color:var(--cream);font-size:13px;letter-spacing:0.15em;text-transform:uppercase;border-radius:999px;transition:all .4s ease;border:1px solid var(--forest)}
+  .btn-primary:hover{background:var(--gold);border-color:var(--gold);color:var(--forest);transform:translateY(-2px);box-shadow:0 12px 30px -10px rgba(184,147,90,0.4)}
+  .btn-ghost{display:inline-flex;align-items:center;gap:10px;padding:16px 32px;color:var(--forest);font-size:13px;letter-spacing:0.15em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;transition:all .4s ease}
+  .btn-ghost:hover{border-color:var(--forest);background:var(--forest);color:var(--cream)}
+  .scroll-hint{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:12px;z-index:3}
+  .scroll-hint::after{content:"";width:1px;height:40px;background:linear-gradient(180deg,var(--gold),transparent);animation:scrollLine 2.4s ease-in-out infinite}
+  @keyframes scrollLine{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}50.01%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+  /* ---------- Sections ---------- */
+  section{position:relative;padding:120px 0}
+  .section-kicker{font-size:11px;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);display:inline-flex;align-items:center;gap:12px;margin-bottom:24px}
+  .section-kicker::before{content:"";width:32px;height:1px;background:var(--gold)}
+  .section-title{font-family:'Fraunces',serif;font-size:clamp(2.2rem,4.5vw,3.8rem);line-height:1.05;color:var(--forest);font-weight:300;letter-spacing:-0.02em}
+  .section-title em{font-style:italic;color:var(--gold);font-weight:400}
+
+  /* ---------- Marquee ---------- */
+  .marquee{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 0;background:var(--paper)}
+  .marquee-track{display:flex;gap:60px;animation:marquee 40s linear infinite;width:max-content}
+  @keyframes marquee{to{transform:translateX(-50%)}}
+  .marquee-item{font-family:'Fraunces',serif;font-style:italic;font-size:20px;color:var(--forest);white-space:nowrap;display:flex;align-items:center;gap:60px}
+  .marquee-item::after{content:"✦";color:var(--gold);font-size:12px}
+
+  /* ---------- Service cards ---------- */
+  .service-card{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:40px 32px;overflow:hidden;transition:transform .5s cubic-bezier(.2,.8,.2,1), border-color .5s, box-shadow .5s}
+  .service-card::before{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(500px circle at var(--mx,50%) var(--my,50%), rgba(184,147,90,0.12), transparent 45%);opacity:0;transition:opacity .5s;pointer-events:none}
+  .service-card:hover::before{opacity:1}
+  .service-card:hover{transform:translateY(-6px);border-color:rgba(184,147,90,0.4);box-shadow:0 20px 50px -20px rgba(30,58,47,0.15)}
+  .service-card > *{position:relative;z-index:1}
+  .service-num{font-family:'Fraunces',serif;font-style:italic;font-size:14px;color:var(--gold);letter-spacing:0.1em}
+  .service-icon{width:48px;height:48px;display:flex;align-items:center;justify-content:center;margin:20px 0 24px;color:var(--forest)}
+  .service-icon svg{width:32px;height:32px;stroke:currentColor;stroke-width:1.2;fill:none}
+  .service-card h3{font-family:'Fraunces',serif;font-size:24px;color:var(--forest);font-weight:400;margin-bottom:12px;letter-spacing:-0.01em}
+  .service-card p{font-size:14px;line-height:1.7;color:var(--muted);margin-bottom:24px}
+  .service-link{font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--forest);display:inline-flex;align-items:center;gap:8px;transition:gap .3s, color .3s}
+  .service-link:hover{gap:14px;color:var(--gold)}
+
+  /* ---------- Stats ---------- */
+  .stat-card{padding:40px 20px;text-align:center;border-right:1px solid var(--line)}
+  .stat-card:last-child{border-right:none}
+  .stat-num{font-family:'Fraunces',serif;font-size:clamp(3rem,5vw,4.5rem);color:var(--forest);font-weight:300;line-height:1;letter-spacing:-0.03em}
+  .stat-num em{font-style:italic;color:var(--gold)}
+  .stat-label{margin-top:14px;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted)}
+
+  /* ---------- Process ---------- */
+  .step{padding:32px 0;border-top:1px solid var(--line);display:grid;grid-template-columns:80px 1fr;gap:32px;align-items:start;transition:padding .4s}
+  .step:hover{padding-left:12px}
+  .step:last-child{border-bottom:1px solid var(--line)}
+  .step-num{font-family:'Fraunces',serif;font-style:italic;font-size:14px;color:var(--gold);letter-spacing:0.1em;padding-top:4px}
+  .step h3{font-family:'Fraunces',serif;font-size:28px;color:var(--forest);font-weight:400;margin-bottom:10px}
+  .step p{font-size:15px;line-height:1.7;color:var(--muted);max-width:500px}
+
+  /* ---------- Testimonials ---------- */
+  .testimonial{padding:40px;background:var(--paper);border:1px solid var(--line);border-radius:4px;position:relative;height:100%}
+  .quote-mark{font-family:'Fraunces',serif;font-size:80px;line-height:0.8;color:var(--gold);opacity:0.4;position:absolute;top:20px;right:30px}
+  .testimonial p{font-family:'Fraunces',serif;font-size:19px;line-height:1.6;color:var(--forest);font-weight:300;font-style:italic}
+  .testimonial-author{margin-top:32px;padding-top:24px;border-top:1px solid var(--line);display:flex;align-items:center;gap:14px}
+  .author-avatar{width:44px;height:44px;border-radius:50%;background:var(--cream-2);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;color:var(--forest);font-size:15px;border:1px solid var(--line)}
+  .author-name{font-size:14px;color:var(--forest);font-weight:500}
+  .author-role{font-size:12px;color:var(--muted);margin-top:2px}
+
+  /* ---------- CTA ---------- */
+  .cta-box{background:var(--forest);color:var(--cream);border-radius:4px;padding:80px 60px;position:relative;overflow:hidden}
+  .cta-box::before{content:"";position:absolute;top:-50%;right:-20%;width:600px;height:600px;background:radial-gradient(circle, rgba(184,147,90,0.15), transparent 60%);pointer-events:none}
+  .cta-box .section-kicker{color:var(--gold-soft)}
+  .cta-box .section-kicker::before{background:var(--gold-soft)}
+  .cta-box .section-title{color:var(--cream)}
+  .cta-box .section-title em{color:var(--gold-soft)}
+  .cta-form{background:rgba(247,244,238,0.06);border:1px solid rgba(247,244,238,0.12);border-radius:4px;padding:32px;backdrop-filter:blur(10px)}
+  .form-label{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:8px;display:block}
+  .form-input{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(247,244,238,0.2);padding:10px 0;color:var(--cream);font-family:inherit;font-size:15px;transition:border-color .3s;outline:none}
+  .form-input:focus{border-color:var(--gold)}
+  .form-input::placeholder{color:rgba(247,244,238,0.3)}
+
+  /* ---------- Reveal ---------- */
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity 1s ease, transform 1s cubic-bezier(.2,.8,.2,1)}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+  .reveal-delay-1{transition-delay:.1s}
+  .reveal-delay-2{transition-delay:.2s}
+  .reveal-delay-3{transition-delay:.3s}
+  .reveal-delay-4{transition-delay:.4s}
+
+  /* ---------- Footer ---------- */
+  footer{border-top:1px solid var(--line);padding:60px 0 30px;background:var(--paper)}
+  footer a{color:var(--muted);font-size:14px;transition:color .3s}
+  footer a:hover{color:var(--gold)}
+  .footer-title{font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--forest);margin-bottom:20px;font-weight:500}
+
+  /* Mobile */
+  @media (max-width: 768px){
+    section{padding:80px 0}
+    .cta-box{padding:50px 30px}
+    .stat-card{border-right:none;border-bottom:1px solid var(--line);padding:30px 20px}
+    .stat-card:last-child{border-bottom:none}
+    .step{grid-template-columns:60px 1fr;gap:20px}
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-mark">Maison Clère</div>
+  <div class="loader-sub">Preparing your experience</div>
+  <div class="loader-dots"><span></span><span></span><span></span></div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between">
+    <a href="#" class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-full border border-[var(--forest)] flex items-center justify-center">
+        <span class="serif text-[var(--forest)] text-lg">M</span>
+      </div>
+      <div>
+        <div class="serif text-[var(--forest)] text-xl leading-none">Maison Clère</div>
+        <div class="text-[9px] tracking-[0.3em] text-[var(--muted)] uppercase mt-1">Est. 2011</div>
+      </div>
+    </a>
+    <div class="hidden md:flex items-center gap-10">
+      <a href="#services" class="nav-link">Services</a>
+      <a href="#process" class="nav-link">Process</a>
+      <a href="#about" class="nav-link">Atelier</a>
+      <a href="#testimonials" class="nav-link">Clients</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </div>
+    <a href="#contact" class="btn-primary hidden md:inline-flex">Book a Visit</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg" id="heroBg">
+    <div class="hero-bg-inner"></div>
+  </div>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content max-w-7xl mx-auto px-6 lg:px-12 w-full">
+    <div class="max-w-2xl">
+      <div class="eyebrow reveal">Bespoke Cleaning Atelier</div>
+      <h1 class="mt-8 reveal reveal-delay-1">
+        The quiet art of<br/>
+        a <em>perfectly kept</em><br/>
+        home.
+      </h1>
+      <p class="lead mt-8 reveal reveal-delay-2">
+        For over fifteen years, we have cared for the homes of discerning clients with discretion, craft, and an unwavering attention to detail.
+      </p>
+      <div class="mt-10 flex flex-wrap gap-4 reveal reveal-delay-3">
+        <a href="#contact" class="btn-primary">
+          Request Consultation
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#services" class="btn-ghost">Our Services</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">Scroll</div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span class="marquee-item">Hand-trained artisans</span>
+    <span class="marquee-item">Botanical products</span>
+    <span class="marquee-item">White-glove service</span>
+    <span class="marquee-item">Discreet & insured</span>
+    <span class="marquee-item">Since 2011</span>
+    <span class="marquee-item">Hand-trained artisans</span>
+    <span class="marquee-item">Botanical products</span>
+    <span class="marquee-item">White-glove service</span>
+    <span class="marquee-item">Discreet & insured</span>
+    <span class="marquee-item">Since 2011</span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="grid lg:grid-cols-12 gap-12 mb-20">
+      <div class="lg:col-span-5">
+        <div class="section-kicker reveal">Our Services</div>
+        <h2 class="section-title reveal reveal-delay-1">A considered approach to <em>every surface</em>.</h2>
+      </div>
+      <div class="lg:col-span-6 lg:col-start-7 flex items-end">
+        <p class="text-[var(--muted)] text-[15px] leading-relaxed reveal reveal-delay-2">
+          Each engagement begins with a conversation — understanding the rhythm of your home, the materials within it, and the standard of finish you expect.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="service-card reveal">
+        <div class="service-num">— 01</div>
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h3>Residential Care</h3>
+        <p>Weekly or fortnightly maintenance of your home, performed by a dedicated pair of specialists who learn its particularities.</p>
+        <a href="#" class="service-link">Enquire →</a>
+      </div>
+
+      <div class="service-card reveal reveal-delay-1">
+        <div class="service-num">— 02</div>
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <h3>Private Residences</h3>
+        <p>Comprehensive care for country houses, townhouses, and apartments of distinction. Staff trained in heritage materials.</p>
+        <a href="#" class="service-link">Enquire →</a>
+      </div>
+
+      <div class="service-card reveal reveal-delay-2">
+        <div class="service-num">— 03</div>
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <h3>Deep Restoration</h3>
+        <p>Seasonal intensive cleaning — from stone floors to silk drapes. A thorough renewal of every surface and textile.</p>
+        <a href="#" class="service-link">Enquire →</a>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-num">— 04</div>
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </div>
+        <h3>Transition Service</h3>
+        <p>Preparation for arrival or departure — an exacting standard that ensures a home is presented at its very finest.</p>
+        <a href="#" class="service-link">Enquire →</a>
+      </div>
+
+      <div class="service-card reveal reveal-delay-1">
+        <div class="service-num">— 05</div>
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3>Estate Management</h3>
+        <p>For properties of significant scale. A dedicated house manager coordinates every element of domestic care.</p>
+        <a href="#" class="service-link">Enquire →</a>
+      </div>
+
+      <div class="service-card reveal reveal-delay-2">
+        <div class="service-num">— 06</div>
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <h3>Occasion Preparation</h3>
+        <p>Before guests arrive, after celebrations end. A discreet service that restores calm and order with grace.</p>
+        <a href="#" class="service-link">Enquire →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="about" style="padding:80px 0;background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="grid grid-cols-2 lg:grid-cols-4">
+      <div class="stat-card reveal">
+        <div class="stat-num"><span data-count="15">0</span><em>+</em></div>
+        <div class="stat-label">Years of Craft</div>
+      </div>
+      <div class="stat-card reveal reveal-delay-1">
+        <div class="stat-num"><span data-count="480">0</span><em>+</em></div>
+        <div class="stat-label">Private Homes</div>
+      </div>
+      <div class="stat-card reveal reveal-delay-2">
+        <div class="stat-num"><span data-count="98">0</span><em>%</em></div>
+        <div class="stat-label">Client Retention</div>
+      </div>
+      <div class="stat-card reveal reveal-delay-3">
+        <div class="stat-num"><span data-count="42">0</span></div>
+        <div class="stat-label">Trained Specialists</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="grid lg:grid-cols-12 gap-12 mb-16">
+      <div class="lg:col-span-5">
+        <div class="section-kicker reveal">The Process</div>
+        <h2 class="section-title reveal reveal-delay-1">A methodical <em>ritual</em>, refined over time.</h2>
+      </div>
+      <div class="lg:col-span-6 lg:col-start-7 flex items-end">
+        <p class="text-[var(--muted)] text-[15px] leading-relaxed reveal reveal-delay-2">
+          From first conversation to final inspection, every stage is designed to deliver certainty and calm.
+        </p>
+      </div>
+    </div>
+
+    <div class="max-w-4xl">
+      <div class="step reveal">
+        <div class="step-num">I.</div>
+        <div>
+          <h3>Consultation</h3>
+          <p>A private visit to understand your home, its materials, and the standard you wish to maintain. No obligation, no pressure.</p>
+        </div>
+      </div>
+      <div class="step reveal reveal-delay-1">
+        <div class="step-num">II.</div>
+        <div>
+          <h3>Bespoke Proposal</h3>
+          <p>A tailored plan outlining frequency, scope, and the specialists best suited to your home. Transparent and considered.</p>
+        </div>
+      </div>
+      <div class="step reveal reveal-delay-2">
+        <div class="step-num">III.</div>
+        <div>
+          <h3>The First Visit</h3>
+          <p>Our team arrives with botanical products and linen cloths, performing an initial deep clean to establish the baseline.</p>
+        </div>
+      </div>
+      <div class="step reveal reveal-delay-3">
+        <div class="step-num">IV.</div>
+        <div>
+          <h3>Ongoing Care</h3>
+          <p>A dedicated pair returns on your chosen schedule. The same faces, the same standards, the same quiet attention.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" style="background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="max-w-2xl mb-16">
+      <div class="section-kicker reveal">Client Words</div>
+      <h2 class="section-title reveal reveal-delay-1">Trusted by those who <em>value the details</em>.</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="testimonial reveal">
+        <div class="quote-mark">"</div>
+        <p>They understand a home is not merely cleaned — it is cared for. After three years, we cannot imagine anyone else.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">E.W</div>
+          <div>
+            <div class="author-name">Eleanor Whitmore</div>
+            <div class="author-role">Private Residence, Kensington</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial reveal reveal-delay-1">
+        <div class="quote-mark">"</div>
+        <p>Discretion, consistency, and a genuine pride in their work. The sort of service one rarely finds these days.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">J.H</div>
+          <div>
+            <div class="author-name">James Harrington</div>
+            <div class="author-role">Townhouse, Belgravia</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial reveal reveal-delay-2">
+        <div class="quote-mark">"</div>
+        <p>Our country house has never been better maintained. They treat every surface, every object, with real consideration.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">S.L</div>
+          <div>
+            <div class="author-name">Sophia Langford</div>
+            <div class="author-role">Estate, Cotswolds</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="contact">
+  <div class="max-w-6xl mx-auto px-6 lg:px-12">
+    <div class="cta-box reveal">
+      <div class="grid lg:grid-cols-2 gap-16 items-center relative">
+        <div>
+          <div class="section-kicker">Begin</div>
+          <h2 class="section-title">Let us care for <em>your home</em>.</h2>
+          <p class="mt-6 text-[var(--cream)]/70 text-[15px] leading-relaxed max-w-md">
+            Arrange a private consultation at your convenience. We will visit, listen, and propose a plan suited entirely to you.
+          </p>
+          <div class="mt-10 pt-8 border-t border-[var(--cream)]/15 space-y-3 text-sm text-[var(--cream)]/80">
+            <div class="flex items-center gap-3">
+              <span class="text-[var(--gold-soft)]">✦</span>
+              <span>+44 (0)20 7946 0122</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-[var(--gold-soft)]">✦</span>
+              <span>enquiries@maisonclere.com</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-[var(--gold-soft)]">✦</span>
+              <span>14 Mount Street, London W1K</span>
+            </div>
+          </div>
+        </div>
+        <form class="cta-form space-y-6">
+          <div>
+            <label class="form-label">Your Name</label>
+            <input type="text" class="form-input" placeholder="Eleanor Whitmore"/>
+          </div>
+          <div class="grid grid-cols-2 gap-6">
+            <div>
+              <label class="form-label">Email</label>
+              <input type="email" class="form-input" placeholder="you@email.com"/>
+            </div>
+            <div>
+              <label class="form-label">Telephone</label>
+              <input type="tel" class="form-input" placeholder="+44"/>
+            </div>
+          </div>
+          <div>
+            <label class="form-label">Service of Interest</label>
+            <select class="form-input" style="appearance:none">
+              <option style="background:var(--forest)">Residential Care</option>
+              <option style="background:var(--forest)">Private Residence</option>
+              <option style="background:var(--forest)">Deep Restoration</option>
+              <option style="background:var(--forest)">Estate Management</option>
+            </select>
+          </div>
+          <button type="button" class="btn-primary w-full justify-center" style="background:var(--gold);border-color:var(--gold);color:var(--forest)">
+            Request Consultation
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="grid md:grid-cols-12 gap-10 mb-12">
+      <div class="md:col-span-4">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-9 h-9 rounded-full border border-[var(--forest)] flex items-center justify-center">
+            <span class="serif text-[var(--forest)] text-lg">M</span>
+          </div>
+          <div>
+            <div class="serif text-[var(--forest)] text-xl leading-none">Maison Clère</div>
+            <div class="text-[9px] tracking-[0.3em] text-[var(--muted)] uppercase mt-1">Est. 2011</div>
+          </div>
+        </div>
+        <p class="text-sm text-[var(--muted)] leading-relaxed max-w-xs">A bespoke cleaning atelier serving distinguished homes across London and the home counties.</p>
+      </div>
+      <div class="md:col-span-2 md:col-start-6">
+        <div class="footer-title">Services</div>
+        <ul class="space-y-3">
+          <li><a href="#">Residential</a></li>
+          <li><a href="#">Private Homes</a></li>
+          <li><a href="#">Restoration</a></li>
+          <li><a href="#">Estates</a></li>
+        </ul>
+      </div>
+      <div class="md:col-span-2">
+        <div class="footer-title">Atelier</div>
+        <ul class="space-y-3">
+          <li><a href="#">Our Story</a></li>
+          <li><a href="#">Philosophy</a></li>
+          <li><a href="#">Specialists</a></li>
+          <li><a href="#">Journal</a></li>
+        </ul>
+      </div>
+      <div class="md:col-span-2">
+        <div class="footer-title">Contact</div>
+        <ul class="space-y-3 text-sm text-[var(--muted)]">
+          <li>+44 20 7946 0122</li>
+          <li>enquiries@maisonclere.com</li>
+          <li>14 Mount Street<br/>London W1K</li>
+        </ul>
+      </div>
+    </div>
+    <div class="pt-6 border-t border-[var(--line)] flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[var(--muted)]">
+      <div>© 2026 Maison Clère. All rights reserved.</div>
+      <div class="flex gap-6">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Loader
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('hidden');
+    }, 1600);
+  });
+
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // Parallax hero
+  const heroBg = document.getElementById('heroBg');
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        if (y < window.innerHeight) {
+          heroBg.style.transform = `translateY(${y * 0.35}px)`;
+        }
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  // Mouse-follow glow on service cards (subtle gold)
+  document.querySelectorAll('.service-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - rect.top) + 'px');
+    });
+  });
+
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Animated counters (elegant ease)
+  const counterIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const target = parseInt(el.dataset.count, 10);
+        const duration = 2200;
+        const start = performance.now();
+        const ease = t => 1 - Math.pow(1 - t, 3);
+        const tick = (now) => {
+          const p = Math.min((now - start) / duration, 1);
+          const val = Math.floor(ease(p) * target);
+          el.textContent = val.toLocaleString();
+          if (p < 1) requestAnimationFrame(tick);
+          else el.textContent = target.toLocaleString();
+        };
+        requestAnimationFrame(tick);
+        counterIO.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('[data-count]').forEach(el => counterIO.observe(el));
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      if (id.length > 1) {
+        const t = document.querySelector(id);
+        if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
